@@ -1,0 +1,5 @@
+Some brutally simple scripts to download a Flickr user's images in the highest quality.
+
+I plan on making these a lot cleaner (eventually, hah).
+
+Needs Ruby and the JSON and YAML gems
