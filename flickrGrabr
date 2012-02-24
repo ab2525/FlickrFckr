@@ -1,0 +1,23 @@
+#!/bin/bash
+#Get all of a flickr users photos, and their metadata.
+#usage: ./flickrgrabr username
+USER="$1"
+mkdir -p $USER
+numPages=`curl -s http://www.flickr.com/photos/$USER/|grep -oE "/photos/$USER/page.*/\">.*</a>"|tail -n1|tr "><" " "|awk '{print $2}'`
+echo "User has $numPages pages of photos"
+cd $USER
+for page in `seq 1 $numPages`
+do
+	echo "Getting page $page"
+	wget -q -O "$USER"_$page.html http://www.flickr.com/photos/"$USER"/page$page
+done
+for imagePage in *
+do
+echo "We're processing $imagePage"
+for ID in `cat $imagePage|grep photo_container|grep -oE "/photos/$USER/[0-9]*/"|grep -oE "/[0-9]*/"|sed 's/\///g'`
+do
+echo "We're processing $ID"
+pwd
+../flickrGrabImage "$USER" "$ID"
+done
+done
